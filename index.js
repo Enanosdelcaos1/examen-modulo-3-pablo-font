@@ -21,7 +21,6 @@ class Quiz {
         this.correct = 0;
         this.incorrect = 0;
         this.isAnswered = false;
-        this.selectedOptionIndex = 0;
     }
 
     $(id) { return document.getElementById(id); }
@@ -30,42 +29,11 @@ class Quiz {
         this.reset();
         this.showScreen('quiz');
         this.loadQuestion();
-        this.setupKeyboardEvents();
-    }
-
-    setupKeyboardEvents() {
-        const handleKeyDown = (e) => {
-            const quizScreen = this.$('quizScreen');
-            if (!quizScreen.classList.contains('active')) return;
-
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                e.preventDefault();
-                this.navigateOptions(e.key === 'ArrowDown' ? 1 : -1);
-            } else if (e.key === 'Enter') {
-                e.preventDefault();
-                if (this.isAnswered) this.nextQuestion();
-                else this.selectAnswer(this.selectedOptionIndex, questionsDatabase[this.currentIndex]);
-            }
-        };
-        
-        document.removeEventListener('keydown', handleKeyDown);
-        document.addEventListener('keydown', handleKeyDown);
-    }
-
-    navigateOptions(direction) {
-        const options = document.querySelectorAll('.option:not(.disabled)');
-        if (options.length === 0) return;
-        
-        this.selectedOptionIndex = (this.selectedOptionIndex + direction + options.length) % options.length;
-        document.querySelectorAll('.option').forEach((opt, i) => {
-            opt.classList.toggle('focused', i === this.selectedOptionIndex);
-        });
     }
 
     loadQuestion() {
         const q = questionsDatabase[this.currentIndex];
         this.isAnswered = false;
-        this.selectedOptionIndex = 0;
 
         this.$('currentQuestion').textContent = this.currentIndex + 1;
         this.$('scoreDisplay').textContent = this.correct;
@@ -81,7 +49,7 @@ class Quiz {
         container.innerHTML = '';
         q.options.forEach((opt, i) => {
             const btn = document.createElement('button');
-            btn.className = 'option' + (i === 0 ? ' focused' : '');
+            btn.className = 'option';
             btn.textContent = opt;
             btn.onclick = () => this.selectAnswer(i, q);
             container.appendChild(btn);
@@ -98,7 +66,6 @@ class Quiz {
 
         document.querySelectorAll('.option').forEach((opt, i) => {
             opt.classList.add('disabled');
-            opt.classList.remove('focused');
             if (i === q.correct) opt.classList.add('correct');
             if (i === idx && !isCorrect) opt.classList.add('incorrect');
         });
