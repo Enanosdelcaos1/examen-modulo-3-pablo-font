@@ -5,7 +5,7 @@ const questionsDatabase = [
     { question: "¿Cuál es el planeta más grande del sistema solar?", options: ["Saturno", "Neptuno", "Júpiter", "Tierra"], correct: 2 },
     { question: "¿Cuál es el idioma más hablado en el mundo?", options: ["Inglés", "Mandarín", "Español", "Francés"], correct: 1 },
     { question: "¿Cuál es el elemento químico más abundante en la atmósfera?", options: ["Oxígeno", "Dióxido de carbono", "Nitrógeno", "Argón"], correct: 2 },
-    { question: "¿Cuántos continentes existen?", options: ["5", "6", "7", "8"], correct: 2 },
+    { question: "¿Cuántos continentes existen?", options: ["5", "6", "7", "8"], correct: 1 },
     { question: "¿Cuál es la velocidad de la luz en el vacío?", options: ["300,000 km/h", "300,000 km/s", "150,000 km/s", "600,000 km/s"], correct: 1 },
     { question: "¿En qué año caída el Muro de Berlín?", options: ["1987", "1989", "1991", "1993"], correct: 1 },
     { question: "¿Cuál es el animal terrestre más rápido?", options: ["León", "Guepardo", "Antílope", "Caballo"], correct: 1 }
