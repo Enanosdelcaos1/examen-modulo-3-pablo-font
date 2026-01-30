@@ -14,8 +14,6 @@ const questionsDatabase = [
 class Quiz {
     constructor() {
         this.reset();
-        this.selectedOptionIndex = 0;
-        this.setupKeyboardEvents();
     }
 
     reset() {
@@ -28,8 +26,18 @@ class Quiz {
 
     $(id) { return document.getElementById(id); }
 
+    startQuiz() {
+        this.reset();
+        this.showScreen('quiz');
+        this.loadQuestion();
+        this.setupKeyboardEvents();
+    }
+
     setupKeyboardEvents() {
-        document.addEventListener('keydown', (e) => {
+        const handleKeyDown = (e) => {
+            const quizScreen = this.$('quizScreen');
+            if (!quizScreen.classList.contains('active')) return;
+
             if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                 e.preventDefault();
                 this.navigateOptions(e.key === 'ArrowDown' ? 1 : -1);
@@ -38,23 +46,20 @@ class Quiz {
                 if (this.isAnswered) this.nextQuestion();
                 else this.selectAnswer(this.selectedOptionIndex, questionsDatabase[this.currentIndex]);
             }
-        });
+        };
+        
+        document.removeEventListener('keydown', handleKeyDown);
+        document.addEventListener('keydown', handleKeyDown);
     }
 
     navigateOptions(direction) {
-        const options = document.querySelectorAll('.option');
+        const options = document.querySelectorAll('.option:not(.disabled)');
         if (options.length === 0) return;
         
         this.selectedOptionIndex = (this.selectedOptionIndex + direction + options.length) % options.length;
-        options.forEach((opt, i) => {
+        document.querySelectorAll('.option').forEach((opt, i) => {
             opt.classList.toggle('focused', i === this.selectedOptionIndex);
         });
-    }
-
-    startQuiz() {
-        this.reset();
-        this.showScreen('quiz');
-        this.loadQuestion();
     }
 
     loadQuestion() {
