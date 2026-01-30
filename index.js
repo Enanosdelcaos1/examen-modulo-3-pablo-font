@@ -11,6 +11,26 @@ const questionsDatabase = [
     { question: "¿Cuál es el animal terrestre más rápido?", options: ["León", "Guepardo", "Antílope", "Caballo"], correct: 1 }
 ];
 
+// Función para mezclar opciones aleatoriamente
+function shuffleQuestion(q) {
+    const answers = [];
+    q.options.forEach((opt, idx) => {
+        answers.push({ text: opt, isCorrect: idx === q.correct });
+    });
+    
+    // Mezclar respuestas
+    for (let i = answers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [answers[i], answers[j]] = [answers[j], answers[i]];
+    }
+    
+    return {
+        question: q.question,
+        options: answers.map(a => a.text),
+        correct: answers.findIndex(a => a.isCorrect)
+    };
+}
+
 class Quiz {
     constructor() {
         this.reset();
@@ -32,7 +52,8 @@ class Quiz {
     }
 
     loadQuestion() {
-        const q = questionsDatabase[this.currentIndex];
+        let q = questionsDatabase[this.currentIndex];
+        q = shuffleQuestion(q);
         this.isAnswered = false;
 
         this.$('currentQuestion').textContent = this.currentIndex + 1;
